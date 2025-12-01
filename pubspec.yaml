@@ -52,6 +52,7 @@ dependencies:
   chopper: ^8.5.0
   cherry_toast: ^1.13.0
   flutter_dotenv: 6.0.0
+  firebase_core: ^4.2.1
 
 dev_dependencies:
   flutter_test:

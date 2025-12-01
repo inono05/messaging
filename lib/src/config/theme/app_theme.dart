@@ -17,20 +17,16 @@ class AppTheme {
     return ThemeData.from(
       colorScheme: colorScheme,
       useMaterial3: true,
-      textTheme: _textTheme(colorScheme: colorScheme).apply(
-        fontFamily: FontFamily.euclid,
-      ),
+      textTheme: _textTheme(colorScheme: colorScheme).apply(fontFamily: FontFamily.euclid),
     ).copyWith(
       scaffoldBackgroundColor: colorScheme.outline,
       navigationBarTheme: NavigationBarThemeData(
         labelTextStyle: WidgetStateProperty.all(
-          _textTheme(colorScheme: colorScheme).headlineMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          _textTheme(colorScheme: colorScheme).headlineMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
       appBarTheme: AppBarTheme(
-        color: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: AppSize.p50 * 1.2,
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -39,9 +35,7 @@ class AppTheme {
           statusBarIconBrightness: brightness,
         ),
       ),
-      inputDecorationTheme: AppInputTheme.inputDecorationTheme(
-        colorScheme: colorScheme,
-      ),
+      inputDecorationTheme: AppInputTheme.inputDecorationTheme(colorScheme: colorScheme),
     );
   }
 
