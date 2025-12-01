@@ -2,7 +2,7 @@ import '../entities/message_entity.dart';
 import '../repositories/message_repository.dart';
 
 class UcSendMessage {
-  final MessageRepository _repository;
+  final IMessageRepository _repository;
   UcSendMessage(this._repository);
   Future<List<MessageEntity>> call(List<MessageEntity> messages, String text) async {
     final message = MessageEntity(
