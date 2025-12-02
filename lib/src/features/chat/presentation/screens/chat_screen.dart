@@ -19,6 +19,27 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final textController = TextEditingController();
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollToLatest();
+  }
+
+  void _scrollToLatest() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent + 100,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final chatState = ref.watch(chatProvider);
@@ -31,6 +52,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           return Column(
             children: [
               ListView.builder(
+                controller: scrollController,
                 itemCount: messages.length,
                 itemBuilder: (_, i) => MessageBubble(message: messages.elementAt(i)),
               ).expanded(),
@@ -42,6 +64,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       log(textController.text);
                       chatController.send(textController.text);
                       textController.clear();
+                      _scrollToLatest();
                     },
                     icon: Icon(IconlyLight.send, color: context.primary),
                   ),
