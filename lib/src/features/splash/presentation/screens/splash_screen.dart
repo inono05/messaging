@@ -28,9 +28,9 @@ class SplashScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'PLAN',
+                'Messa',
                 textScaler: TextScaler.linear(2.5),
-                style: context.dLarge?.copyWith(
+                style: context.dMedium?.copyWith(
                   //color: context.secondary,
                   fontFamily: FontFamily.euclid,
                   foreground: Paint()
@@ -42,9 +42,9 @@ class SplashScreen extends ConsumerWidget {
                 ),
               ),
               Text(
-                'IFY',
+                'GING',
                 textScaler: TextScaler.linear(3.5),
-                style: context.dLarge?.copyWith(
+                style: context.dSmall?.copyWith(
                   //color: context.secondary,
                   fontFamily: FontFamily.euclid,
                   foreground: Paint()
@@ -58,29 +58,21 @@ class SplashScreen extends ConsumerWidget {
             ],
           ),
           const Spacer(),
-          AppText.h0(
-            title: 'The easiest way to Plan, Track and Manage your home tasks.',
-            maxLines: 2,
-            fontWeight: FontWeight.w600,
-            textScaleFactor: 1.2,
-          ).paddingOnly(left: AppSize.p16),
           SwitchListTile(
             value: themeMode.name == "dark" ? true : false,
             onChanged: (value) {
               log(value.toString());
-              ref
-                  .read(themeNotifierProvider.notifier)
-                  .setTheme(value ? AppThemeMode.dark : AppThemeMode.light);
+              ref.read(themeNotifierProvider.notifier).setTheme(value ? AppThemeMode.dark : AppThemeMode.light);
             },
             title: const AppText(title: 'Dark Mode'),
           ),
-          gapW50,
-          AppButton(
-            title: 'Get Started',
-            onPressed: () => context.goNamed(AppRoutes.onboarding.name),
-          ),
+          gapH50,
+          AppButton(title: 'Dashboard', onPressed: () => context.goNamed(AppRoutes.onboarding.name)),
+          gapH50,
+          AppButton.secondary(title: 'Messaging', onPressed: () => context.goNamed(AppRoutes.chat.name)),
+          gapH50,
         ],
-      ),
+      ).paddingSymmetric(horizontal: AppSize.p12),
     );
   }
 }

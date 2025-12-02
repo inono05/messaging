@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -25,9 +24,6 @@ extension ContextExtension on BuildContext {
   Color get onTertiary => colorScheme.onTertiary;
   Color get onSurface => colorScheme.onSurface;
 
-
-
-
   // TextTheme get textTheme => Theme.of(this).textTheme;
   TextTheme get textTheme => Theme.of(this).textTheme;
   TextStyle? get tLarge => textTheme.titleLarge;
@@ -37,13 +33,14 @@ extension ContextExtension on BuildContext {
   TextStyle? get hLarge => textTheme.headlineLarge;
   TextStyle? get hMedium => textTheme.headlineMedium;
   TextStyle? get hSmall => textTheme.headlineSmall;
+
+  TextStyle? get bLarge => textTheme.bodyMedium;
+  TextStyle? get bMedium => textTheme.bodyMedium;
+  TextStyle? get bSmall => textTheme.bodyMedium;
   ThemeData get theme => Theme.of(this);
 
   //spinkit loader extension
-  Widget get loader => SpinKitRipple(
-    color: primary,
-    size: AppSize.p25,
-  );
+  Widget get loader => SpinKitRipple(color: primary, size: AppSize.p25);
 }
 
 extension MediaQueryX on BuildContext {

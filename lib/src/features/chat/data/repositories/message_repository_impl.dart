@@ -17,8 +17,8 @@ class MessageRepository implements IMessageRepository {
       "Could you please clarify?",
       "Noted.",
     ];
-    final randomReplies = replies.shuffle(Random()) as List<String>;
-    final text = randomReplies.first;
+    replies.shuffle(Random());
+    final text = replies.first;
     return MessageEntity(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       text: text,

@@ -1,3 +1,5 @@
+import 'package:hive/hive.dart';
+import 'package:messaging/src/features/chat/data/adapters/hive_adapter_message.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../config/theme/data/datasources/theme_preferences.dart';
@@ -14,6 +16,7 @@ Future<void> appStartup(Ref ref) async {
   });
   // await for all initialization code to be complete before returning
   await HiveDB.ensureInitialized();
+  Hive.registerAdapter(HiveAdapterMessage());
   //await UserPreferenceService.ensureInitialized();
   await AppThemePreferences.ensureInitialized();
   //await ref.watch(entryRepositoryProvider.future);

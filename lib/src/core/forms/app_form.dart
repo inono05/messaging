@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
-import 'package:messaging/src/shared/shared.dart';
+import 'package:messaging/src/shared/extensions/context_extension.dart';
 
 typedef OnChanged = void Function(String value);
 
-class AppField<T extends StateNotifier<AsyncValue<void>>>
-    extends ConsumerWidget {
+class AppField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
-  final String field;
+
   final FocusNode? focusNode;
   final Widget? suffixIcon;
   final Widget? suffix;
@@ -19,7 +16,7 @@ class AppField<T extends StateNotifier<AsyncValue<void>>>
   final Widget? prefix;
   final String? hintText;
   final String? prefixText;
-  final String? labelText;
+  final String? label;
   final bool isPassword;
   final bool isTextArea;
   final bool isBorderLess;
@@ -28,7 +25,12 @@ class AppField<T extends StateNotifier<AsyncValue<void>>>
   final bool readOnly;
   final String? Function(String?)? validator;
   final String? initialValue;
-  final String? errorText;
+  final String? error;
+  final TextStyle? style;
+  final TextStyle? hintStyle;
+  final TextStyle? labelStyle;
+  final TextStyle? errorStyle;
+  final TextStyle? prefixStyle;
   final VoidCallback? onTap;
   final OnChanged onChanged;
   final void Function(String?)? onSaved;
@@ -43,13 +45,15 @@ class AppField<T extends StateNotifier<AsyncValue<void>>>
   final bool? autoFocus;
   final BorderSide? borderSide;
   final TextCapitalization textCapitalization;
+  final Color? fillColor;
+  final Color? cursorColor;
 
   const AppField({
     super.key,
     this.controller,
     this.hintText,
-    this.labelText,
-    this.errorText,
+    this.label,
+    this.error,
     this.isPassword = false,
     this.isTextArea = false,
     this.isBorderLess = true,
@@ -79,60 +83,66 @@ class AppField<T extends StateNotifier<AsyncValue<void>>>
     this.isFilled = true,
     this.autoFocus = false,
     this.textCapitalization = TextCapitalization.sentences,
-    required this.field,
+
+    this.style,
+    this.hintStyle,
+    this.labelStyle,
+    this.errorStyle,
+    this.prefixStyle,
+    this.fillColor,
+    this.cursorColor,
   });
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context) {
+    final inputStyle = context.bMedium?.copyWith(color: context.primary);
+    final labelStyleDefault = context.hSmall;
+    final hintStyleDefault = context.bMedium;
+    final errorStyleDefault = context.hSmall;
+    final prefixStyleDefault = context.bSmall;
     return TextFormField(
-          style: context.hMedium?.copyWith(color: context.tertiary),
-          autofocus: autoFocus!,
-          textCapitalization: textCapitalization,
-          validator: validator,
-          controller: controller,
-          readOnly: readOnly,
-          initialValue: initialValue,
-          onTap: onTap,
-          onSaved: onSaved,
-          inputFormatters: inputFormatters,
-          onEditingComplete: onEditingComplete,
-          onFieldSubmitted: onFieldSubmitted,
-          maxLength: maxLength,
-          onChanged: (value) {
-            onChanged(value);
-          },
-          keyboardType: keyboardType,
-          textInputAction: TextInputAction.newline,
-          expands: isExpands!,
-          maxLines: maxLines,
-          minLines: minLines,
-          obscureText: isPassword,
-          focusNode: focusNode,
-          cursorColor: context.secondary,
-          decoration: InputDecoration(
-            helperText: helperText,
-            errorText: errorText,
-            prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon,
-            fillColor: context.surface,
-            filled: isFilled,
-            prefix: prefix,
-            prefixText: prefixText,
-            suffix: suffix,
-            labelText: labelText,
-            hintText: hintText,
-            counterText: "",
-            prefixStyle: context.hSmall,
-            hintStyle: context.hSmall?.copyWith(
-              color: context.secondary.withValues(alpha: .3),
-            ),
-            labelStyle: context.hMedium?.copyWith(color: context.primary),
-            errorStyle: context.hSmall?.copyWith(color: context.error),
-          ),
-        )
-        .paddingSymmetric(vertical: AppSize.p8)
-        .animate()
-        .fadeIn(duration: 500.ms)
-        .slide();
+      style: style ?? inputStyle,
+      autofocus: autoFocus!,
+      textCapitalization: textCapitalization,
+      validator: validator,
+      controller: controller,
+      readOnly: readOnly,
+      initialValue: initialValue,
+      onTap: onTap,
+      onSaved: onSaved,
+      inputFormatters: inputFormatters,
+      onEditingComplete: onEditingComplete,
+      onFieldSubmitted: onFieldSubmitted,
+      maxLength: maxLength,
+      onChanged: (value) {
+        onChanged(value);
+      },
+      keyboardType: keyboardType,
+      textInputAction: TextInputAction.newline,
+      expands: isExpands!,
+      maxLines: maxLines,
+      minLines: minLines,
+      obscureText: isPassword,
+      focusNode: focusNode,
+      cursorColor: cursorColor ?? Colors.black,
+      decoration: InputDecoration(
+        helperText: helperText,
+        errorText: error,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        fillColor: fillColor ?? Colors.grey.shade100,
+        filled: isFilled,
+        prefix: prefix,
+        prefixText: prefixText,
+        suffix: suffix,
+        labelText: label,
+        hintText: hintText,
+        counterText: "",
+        prefixStyle: prefixStyle ?? prefixStyleDefault,
+        hintStyle: hintStyle ?? hintStyleDefault,
+        labelStyle: labelStyle ?? labelStyleDefault,
+        errorStyle: errorStyle ?? errorStyleDefault?.copyWith(color: Colors.red),
+      ),
+    ).animate().fadeIn(duration: 500.ms).slide();
   }
 }
