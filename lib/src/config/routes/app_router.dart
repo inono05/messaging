@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:messaging/src/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'screens.dart';
@@ -11,7 +12,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 enum AppRoutes {
   onboarding,
-  login,
+  dashboard,
   register,
   splash,
   chat,
@@ -41,18 +42,22 @@ GoRouter appRouter(Ref ref) {
             NoTransitionPage(child: const SplashScreen()),
       ),
       GoRoute(
-        name: AppRoutes.onboarding.name,
-        path: '/onboarding',
-        pageBuilder: (context, state) =>
-            NoTransitionPage(child: const OnboardScreen()),
-      ),
-
-      GoRoute(
         name: AppRoutes.chat.name,
-        path: '/tasks',
+        path: '/chat',
         pageBuilder: (context, state) =>
             NoTransitionPage(child: const ChatScreen()),
       ),
+      GoRoute(
+        name: AppRoutes.dashboard.name,
+        path: '/dashboard/:url',
+        pageBuilder: (context, state){
+          final String? url = state.pathParameters['url'];
+          return NoTransitionPage(child: DashboardScreen(webUrl: url));
+        }
+
+      ),
+
+
     ],
   );
 }
