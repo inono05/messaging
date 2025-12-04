@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:messaging/src/features/chat/domain/entities/message_entity.dart';
@@ -28,6 +29,7 @@ class ChatController extends StateNotifier<AsyncValue<List<MessageEntity>>> {
     Future.delayed(const Duration(seconds: 1), () async {
       final afterReply = await ucAutoReply(updated);
       state = AsyncData(afterReply);
+
     });
   }
 }

@@ -53,6 +53,8 @@ dependencies:
   cherry_toast: ^1.13.0
   flutter_dotenv: 6.0.0
   firebase_core: ^4.2.1
+  firebase_messaging: ^16.0.4
+  flutter_local_notifications: ^19.5.0
   webview_flutter: ^4.13.0
 
 dev_dependencies:

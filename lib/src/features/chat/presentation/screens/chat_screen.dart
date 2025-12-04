@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconly/iconly.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:messaging/src/features/chat/presentation/components/message_bubble.dart';
 import 'package:messaging/src/features/chat/presentation/providers/chat_provider.dart';
 import 'package:messaging/src/shared/shared.dart';
@@ -19,25 +20,26 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final textController = TextEditingController();
-  final scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _scrollToLatest();
+  void _scrollToLatest({bool animate = true}) {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position.maxScrollExtent + 100;
+    if (animate) {
+      _scrollController.animateTo(
+        position,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    } else {
+      _scrollController.jumpTo(position);
+    }
   }
 
-  void _scrollToLatest() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent + 100,
-          duration: Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,6 +47,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final chatState = ref.watch(chatProvider);
     final chatController = ref.read(chatProvider.notifier);
 
+    //listen to scroll when a new message come up
+    ref.listen(chatProvider, (prev, next) {
+      if (prev == null) return;
+      if (next.hasValue && (next.value!.length > prev.value!.length)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToLatest());
+      }
+    });
     return Scaffold(
       appBar: AppBar(title: AppText(title: "Messages")),
       body: chatState.when(
@@ -52,24 +61,35 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           return Column(
             children: [
               ListView.builder(
-                controller: scrollController,
+                shrinkWrap: true,
+                controller: _scrollController,
                 itemCount: messages.length,
                 itemBuilder: (_, i) => MessageBubble(message: messages.elementAt(i)),
               ).expanded(),
               Row(
                 children: [
-                  AppField(isFilled: false, controller: textController, onChanged: (value) {}).expanded(),
+                  IconButton(
+                    onPressed: () {
+                      log(textController.text);
+                    },
+                    icon: Icon(Iconsax.add, color: context.primary),
+                  ),
+                  AppField(
+                    hintText: AppConstants.chatPlaceholder,
+                    isFilled: false,
+                    controller: textController,
+                    onChanged: (value) {},
+                  ).expanded(),
                   IconButton(
                     onPressed: () {
                       log(textController.text);
                       chatController.send(textController.text);
                       textController.clear();
-                      _scrollToLatest();
                     },
                     icon: Icon(IconlyLight.send, color: context.primary),
                   ),
                 ],
-              ),
+              ).paddingSymmetric(horizontal: AppSize.p4, vertical: AppSize.p4),
               gapH50,
             ],
           );

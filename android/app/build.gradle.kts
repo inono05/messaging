@@ -8,10 +8,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-dependencies{
+dependencies {
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
-
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
 
 android {
@@ -20,12 +20,20 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+        isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    /*kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }*/
+    kotlin {
+        target {
+            compilerOptions {
+                optIn.add("kotlin.RequiresOptIn")
+            }
+        }
     }
 
     defaultConfig {
