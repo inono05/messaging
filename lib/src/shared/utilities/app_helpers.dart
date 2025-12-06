@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../main.dart';
 import '../shared.dart';
@@ -21,10 +25,38 @@ class AppHelpers {
           ).show(context);
   }
 
-  static Future<void> inAppMessagingSetup() async {
-    final inAppNotification = FlutterLocalNotificationsPlugin();
-    final androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    await inAppNotification.initialize(InitializationSettings(android: androidSettings));
+  static Future<File?> loadImageFromCamera() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? picture = await picker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 400,
+      maxHeight: 400,
+    );
+    final path = picture!.path;
+    final targetPath = "$path-compressed.jpg";
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+      picture.path,
+      targetPath,
+      quality: 80,
+    );
+    return (compressedImage != null) ? File(picture.path) : null;
+  }
+
+  static Future<File?> loadImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? picture = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 400,
+      maxHeight: 400,
+    );
+    final path = picture!.path;
+    final targetPath = "$path-compressed.jpg";
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+      picture.path,
+      targetPath,
+      quality: 80,
+    );
+    return (compressedImage != null) ? File(picture.path) : null;
   }
 
   static void requestPermission() async {

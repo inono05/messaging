@@ -62,14 +62,25 @@ class SplashScreen extends ConsumerWidget {
             value: themeMode.name == "dark" ? true : false,
             onChanged: (value) {
               log(value.toString());
-              ref.read(themeNotifierProvider.notifier).setTheme(value ? AppThemeMode.dark : AppThemeMode.light);
+              ref
+                  .read(themeNotifierProvider.notifier)
+                  .setTheme(value ? AppThemeMode.dark : AppThemeMode.light);
             },
-            title: const AppText(title: 'Dark Mode'),
+            title: AppText(title: 'Dark Mode', color: context.tertiary),
           ),
           gapH50,
-          AppButton(title: 'Dashboard', onPressed: () => context.goNamed(AppRoutes.dashboard.name, pathParameters: {'url': AppConstants.webUrl},),),
+          AppButton(
+            title: 'Dashboard',
+            onPressed: () => context.pushNamed(
+              AppRoutes.dashboard.name,
+              pathParameters: {'url': AppConstants.webUrl},
+            ),
+          ),
           gapH20,
-          AppButton.secondary(title: 'Messaging', onPressed: () => context.goNamed(AppRoutes.chat.name)),
+          AppButton.secondary(
+            title: 'Messaging',
+            onPressed: () => context.pushNamed(AppRoutes.chat.name),
+          ),
           gapH50,
         ],
       ).paddingSymmetric(horizontal: AppSize.p12),

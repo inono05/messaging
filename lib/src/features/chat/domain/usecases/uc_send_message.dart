@@ -3,13 +3,20 @@ import '../repositories/message_repository.dart';
 
 class UcSendMessage {
   final IMessageRepository _repository;
+
   UcSendMessage(this._repository);
-  Future<List<MessageEntity>> call(List<MessageEntity> messages, String text) async {
+
+  Future<List<MessageEntity>> call(
+    List<MessageEntity> messages, {
+    String? text,
+    String? imagePath,
+  }) async {
     final message = MessageEntity(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       text: text,
       createdAt: DateTime.now(),
       isMe: true,
+      imagePath: imagePath,
     );
     final updated = [...messages, message];
     await _repository.saveMessages(updated);

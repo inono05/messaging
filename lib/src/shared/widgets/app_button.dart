@@ -48,62 +48,40 @@ class AppButton extends StatelessWidget {
     }
 
     return SizedBox(
-          height: AppSize.p55,
-          width: context.width,
-          child: ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: bgColor,
-              foregroundColor: fgColor,
-              elevation: 5.2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSize.p10),
-                side: const BorderSide(width: 0.0, color: Colors.transparent),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (icon != null) ...[
-                  if (!iconOnRight) Icon(icon!, color: context.surface),
-                  gapW20,
-                  Expanded(
-                    child:
-                        (isLoading == true)
-                            ? SpinKitRipple(
-                              color: context.surface,
-                              size: AppSize.p25,
-                            )
-                            : Text(
-                              title,
-                              textAlign: TextAlign.center,
-                              style: context.hMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: context.surface,
-                              ),
-                            ),
-                  ),
-                  gapW20,
-                  if (iconOnRight) Icon(icon!, color: context.surface),
-                ] else
-                  (isLoading == true)
-                      ? SpinKitRipple(color: context.primary, size: AppSize.p25)
-                      : Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: context.hMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: context.surface,
-                        ),
-                      ),
-              ],
-            ),
+      height: AppSize.p55,
+      width: context.width,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgColor,
+          foregroundColor: fgColor,
+          elevation: 5.2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSize.p10),
+            side: const BorderSide(width: 0.0, color: Colors.transparent),
           ),
-        )
-        .animate()
-        .fadeIn(duration: 500.ms)
-        .slide()
-        .paddingSymmetric(horizontal: AppSize.p4);
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              if (!iconOnRight) Icon(icon!, color: context.surface),
+              gapW20,
+              Expanded(
+                child: (isLoading == true)
+                    ? SpinKitRipple(color: context.surface, size: AppSize.p25)
+                    : AppText(title: title, textAlign: TextAlign.center, color: context.onTertiary),
+              ),
+              gapW20,
+              if (iconOnRight) Icon(icon!, color: context.surface),
+            ] else
+              (isLoading == true)
+                  ? SpinKitRipple(color: context.primary, size: AppSize.p25)
+                  : AppText(title: title, textAlign: TextAlign.center, color: context.onTertiary),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(duration: 500.ms).slide().paddingSymmetric(horizontal: AppSize.p4);
   }
 }

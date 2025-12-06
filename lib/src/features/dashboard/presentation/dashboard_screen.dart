@@ -1,10 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import '../../../shared/shared.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String? webUrl;
+
   const DashboardScreen({super.key, this.webUrl});
 
   @override
@@ -17,11 +20,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
-   /* if (Platform.isAndroid) {
-      WebView.platform = AndroidView();
-    }*/
-
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(Uri.parse(widget.webUrl!));
@@ -30,7 +28,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(''), toolbarHeight: 0,),
+      appBar: AppBar(
+        title: const Text(''),
+        toolbarHeight: 40.0,
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: Icon(Iconsax.arrow_left, color: context.primary),
+        ),
+      ),
       body: WebViewWidget(controller: controller),
     );
   }

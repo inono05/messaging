@@ -12,14 +12,22 @@ class HiveAdapterMessage extends TypeAdapter<HiveModelMessage> {
     final text = reader.readString();
     final createdAtIso = reader.readString();
     final isMe = reader.readBool();
-    return HiveModelMessage(id: id, text: text, createdAtIso: createdAtIso, isMe: isMe);
+    final imagePath = reader.readString();
+    return HiveModelMessage(
+      id: id,
+      text: text.isEmpty ? null : text,
+      createdAtIso: createdAtIso,
+      isMe: isMe,
+      imagePath: imagePath.isEmpty ? null : imagePath,
+    );
   }
 
   @override
   void write(BinaryWriter writer, HiveModelMessage obj) {
     writer.writeString(obj.id);
-    writer.writeString(obj.text);
+    writer.writeString(obj.text ?? '');
     writer.writeString(obj.createdAtIso);
     writer.writeBool(obj.isMe);
+    writer.writeString(obj.imagePath ?? '');
   }
 }

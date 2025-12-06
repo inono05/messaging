@@ -12,7 +12,7 @@ class AppColors {
     secondaryContainer: Color(0xFFE0E0E0),
     onSecondaryContainer: Color(0xFFFFFFFF),
     tertiary: Color(0xFF1b2026),
-    onTertiary: Color(0xFF1b2026),
+    onTertiary: Color(0xFFFFFFFF),
     tertiaryContainer: Color(0xFFFFD8E4),
     onTertiaryContainer: Color(0xFF31111D),
     error: Color(0xFFB3261E),

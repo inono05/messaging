@@ -10,13 +10,7 @@ part 'app_router.g.dart';
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 //final _bibleNavKey = GlobalKey<NavigatorState>(debugLabel: 'bible');
 
-enum AppRoutes {
-  onboarding,
-  dashboard,
-  register,
-  splash,
-  chat,
-}
+enum AppRoutes { dashboard, splash, chat, imagePreview }
 
 @riverpod
 GoRouter appRouter(Ref ref) {
@@ -38,26 +32,26 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         name: AppRoutes.splash.name,
         path: '/',
-        pageBuilder: (context, state) =>
-            NoTransitionPage(child: const SplashScreen()),
+        pageBuilder: (context, state) => NoTransitionPage(child: const SplashScreen()),
       ),
       GoRoute(
         name: AppRoutes.chat.name,
         path: '/chat',
-        pageBuilder: (context, state) =>
-            NoTransitionPage(child: const ChatScreen()),
+        pageBuilder: (context, state) => NoTransitionPage(child: const ChatScreen()),
+      ),
+      GoRoute(
+        name: AppRoutes.imagePreview.name,
+        path: '/image-preview',
+        pageBuilder: (context, state) => NoTransitionPage(child: const ImagePreviewScreen()),
       ),
       GoRoute(
         name: AppRoutes.dashboard.name,
         path: '/dashboard/:url',
-        pageBuilder: (context, state){
+        pageBuilder: (context, state) {
           final String? url = state.pathParameters['url'];
           return NoTransitionPage(child: DashboardScreen(webUrl: url));
-        }
-
+        },
       ),
-
-
     ],
   );
 }

@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:messaging/src/features/chat/presentation/components/message_bubble.dart';
@@ -10,6 +12,7 @@ import 'package:messaging/src/features/chat/presentation/providers/chat_provider
 import 'package:messaging/src/shared/shared.dart';
 
 import '../../../../core/forms/app_form.dart';
+import '../components/media_modal.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -20,11 +23,12 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final textController = TextEditingController();
+  late File? pathImage;
   final ScrollController _scrollController = ScrollController();
 
   void _scrollToLatest({bool animate = true}) {
     if (!_scrollController.hasClients) return;
-    final position = _scrollController.position.maxScrollExtent + 100;
+    final position = _scrollController.position.maxScrollExtent + 700;
     if (animate) {
       _scrollController.animateTo(
         position,
@@ -46,16 +50,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget build(BuildContext context) {
     final chatState = ref.watch(chatProvider);
     final chatController = ref.read(chatProvider.notifier);
+    final cameraImage = ref.watch(cameraImageProvider);
+    final galleryImage = ref.watch(galleryImageProvider);
 
     //listen to scroll when a new message come up
     ref.listen(chatProvider, (prev, next) {
-      if (prev == null) return;
-      if (next.hasValue && (next.value!.length > prev.value!.length)) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToLatest());
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToLatest());
     });
     return Scaffold(
-      appBar: AppBar(title: AppText(title: "Messages")),
+      appBar: AppBar(
+        title: AppText(title: "Messages"),
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: Icon(Iconsax.arrow_left, color: context.primary),
+        ),
+      ),
       body: chatState.when(
         data: (messages) {
           return Column(
@@ -71,6 +80,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   IconButton(
                     onPressed: () {
                       log(textController.text);
+                      showModalBottomSheet(context: context, builder: (_) => const MediaModal());
                     },
                     icon: Icon(Iconsax.add, color: context.primary),
                   ),
@@ -82,6 +92,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   ).expanded(),
                   IconButton(
                     onPressed: () {
+                      pathImage = cameraImage ?? galleryImage;
                       log(textController.text);
                       chatController.send(textController.text);
                       textController.clear();

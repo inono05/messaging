@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:messaging/src/features/chat/domain/entities/message_entity.dart';
@@ -5,6 +7,7 @@ import 'package:messaging/src/shared/shared.dart';
 
 class MessageBubble extends StatelessWidget {
   final MessageEntity message;
+
   const MessageBubble({super.key, required this.message});
 
   @override
@@ -22,7 +25,12 @@ class MessageBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMe ? .end : .start,
           children: [
-            AppText(title: message.text, color: isMe ? Colors.white : Colors.black),
+            (message.imagePath == null)
+                ? AppText(title: message.text!, color: isMe ? Colors.white : Colors.black)
+                : ClipRRect(
+                    borderRadius: .circular(AppSize.p12),
+                    child: Image.file(File(message.imagePath!), fit: BoxFit.cover),
+                  ),
             gapH4,
             AppText.h5(title: time, color: isMe ? Colors.white70 : Colors.black54),
           ],

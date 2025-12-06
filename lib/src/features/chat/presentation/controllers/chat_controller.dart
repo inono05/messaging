@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:messaging/src/features/chat/domain/entities/message_entity.dart';
@@ -11,8 +10,11 @@ class ChatController extends StateNotifier<AsyncValue<List<MessageEntity>>> {
   late final UcSendMessage ucSendMessage;
   late final UcAutoReply ucAutoReply;
 
-  ChatController({required this.ucAutoReply, required this.ucSendMessage, required this.ucGetMessage})
-    : super(const AsyncLoading()) {
+  ChatController({
+    required this.ucAutoReply,
+    required this.ucSendMessage,
+    required this.ucGetMessage,
+  }) : super(const AsyncLoading()) {
     load();
   }
 
@@ -24,12 +26,21 @@ class ChatController extends StateNotifier<AsyncValue<List<MessageEntity>>> {
 
   Future<void> send(String text) async {
     final messages = state.value ?? [];
-    final updated = await ucSendMessage(messages, text);
+    final updated = await ucSendMessage(messages, text: text);
 
     Future.delayed(const Duration(seconds: 1), () async {
       final afterReply = await ucAutoReply(updated);
       state = AsyncData(afterReply);
+    });
+  }
 
+  Future<void> sendImage(String imagePath) async {
+    final messages = state.value ?? [];
+    final updated = await ucSendMessage(messages, imagePath: imagePath);
+
+    Future.delayed(const Duration(seconds: 1), () async {
+      final afterReply = await ucAutoReply(updated);
+      state = AsyncData(afterReply);
     });
   }
 }
