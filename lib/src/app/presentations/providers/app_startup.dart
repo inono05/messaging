@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hive/hive.dart';
 import 'package:messaging/src/features/chat/data/adapters/hive_adapter_message.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../firebase_options.dart';
 import '../../../config/theme/data/datasources/theme_preferences.dart';
@@ -17,6 +18,7 @@ Future<void> appStartup(Ref ref) async {
   await HiveDB.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AppFirebaseMessaging().init();
+  await WebViewCookieManager().platform.clearCookies();
   Hive.registerAdapter(HiveAdapterMessage());
   await AppThemePreferences.ensureInitialized();
 }
