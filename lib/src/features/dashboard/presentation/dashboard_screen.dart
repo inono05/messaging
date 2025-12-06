@@ -49,16 +49,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           icon: Icon(Iconsax.arrow_left, color: context.primary),
         ),
       ),
-      body: (serverStatus.available == null)
-          ? SpinKitChasingDots(color: context.primary).toCenter()
-          : (serverStatus.available == false)
-          ? WebviewErrorWidget(
-              controller: controller,
-              message: AppConstants.serverNotAvailableMessage,
-            )
-          : (webviewError)
-          ? WebviewErrorWidget(controller: controller, message: AppConstants.serverNotErrorMessage)
-          : WebViewWidget(controller: controller),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          controller.reload();
+        },
+        child: SingleChildScrollView(
+          child: (serverStatus.available == null)
+              ? SpinKitChasingDots(color: context.primary).toCenter()
+              : (serverStatus.available == false)
+              ? WebviewErrorWidget(
+                  controller: controller,
+                  message: AppConstants.serverNotAvailableMessage,
+                )
+              : (webviewError)
+              ? WebviewErrorWidget(
+                  controller: controller,
+                  message: AppConstants.serverNotErrorMessage,
+                )
+              : WebViewWidget(controller: controller),
+        ),
+      ),
     );
   }
 }
